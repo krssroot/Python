@@ -8,6 +8,9 @@
 [![Last Commit](https://img.shields.io/github/last-commit/krssroot/Python?style=flat-square)](https://github.com/krssroot/Python/commits)
 [![Pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?style=flat-square)](https://github.com/pre-commit/pre-commit)
 [![Ruff](https://img.shields.io/static/v1?label=code%20style&message=ruff&color=black&style=flat-square)](https://github.com/charliermarsh/ruff)
+[![CI](https://img.shields.io/github/actions/workflow/status/krssroot/Python/build.yml?branch=master&style=flat-square)](https://github.com/krssroot/Python/actions/workflows/build.yml)
+[![Ruff CI](https://img.shields.io/github/actions/workflow/status/krssroot/Python/ruff.yml?branch=master&style=flat-square)](https://github.com/krssroot/Python/actions/workflows/ruff.yml)
+[![Docs](https://img.shields.io/github/actions/workflow/status/krssroot/Python/sphinx.yml?branch=master&style=flat-square)](https://github.com/krssroot/Python/actions/workflows/sphinx.yml)
 
 </div>
 
@@ -22,9 +25,11 @@ A curated collection of algorithm implementations in Python — organized by top
 
 - [About](#about)
 - [Badges & Status](#badges--status)
+- [Quick links](#quick-links)
 - [Repository structure](#repository-structure)
 - [How to use](#how-to-use)
-- [Development](#development)
+- [Examples runner](#examples-runner)
+- [Development & Tests](#development--tests)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -34,9 +39,20 @@ This repository collects implementations of common algorithms and data structure
 
 ## Badges & Status
 
-- Repo size, license, language, and last commit badges are shown at the top.
+- Top-level badges show repository size, license, language, last commit.
+- CI workflows are present (.github/workflows/*): build, ruff, sphinx documentation. Badges above link to their workflow pages.
 - Linters and pre-commit hooks are configured (see .pre-commit-config.yaml and pyproject.toml).
 - A development container is provided in .devcontainer for a reproducible contributor environment.
+
+## Quick links
+
+- Data structures: https://github.com/krssroot/Python/tree/master/data_structures
+- Graph algorithms: https://github.com/krssroot/Python/tree/master/graphs
+- Sorting algorithms: https://github.com/krssroot/Python/tree/master/sorts
+- Dynamic programming: https://github.com/krssroot/Python/tree/master/dynamic_programming
+- Machine learning: https://github.com/krssroot/Python/tree/master/machine_learning
+
+Feel free to open DIRECTORY.md for a full, grouped listing.
 
 ## Repository structure
 
@@ -89,7 +105,7 @@ scheduling/           Scheduling algorithms and examples
 scripts/              Utility scripts used by the repository
 searches/             Searching algorithms and examples
 sorts/                Sorting algorithms
-a-strings/            String algorithms and utilities
+strings/              String algorithms and utilities
 uv.lock               Dependency lock (UV project file)
 pyproject.toml        Project metadata and tooling configuration
 index.md              Simple index / landing page
@@ -120,27 +136,41 @@ pre-commit run --all-files
 ruff check .
 ```
 
-Examples: run a single algorithm file (example):
+Examples: check a single algorithm file compiles (safe smoke check):
 
 ```bash
-python sorts/quick_sort.py
+python -m py_compile sorts/example_sort.py  # replace with an existing file
 ```
 
-Notes:
-- Many directories contain example scripts and small test code. Files are intended to be readable and educational.
+## Examples runner
 
-## Development
+A lightweight utility that finds the first Python example in a set of categories and verifies it compiles (safe, non-executing check):
 
-- Project uses pyproject.toml for tooling configuration (see pyproject.toml).
-- Pre-commit hooks configured in .pre-commit-config.yaml to run linters and formatters.
-- Devcontainer provided for consistent developer environment (.devcontainer/).
+```bash
+python scripts/run_examples.py --dirs data_structures sorts graphs dynamic_programming
+```
 
-Testing:
-- There is no single unified test runner for the whole repo. Use python -m unittest or run example scripts directly.
+This will report which example files were found and verify they compile without executing their runtime code.
+
+## Development & Tests
+
+The repository uses pyproject.toml for tooling configuration and pre-commit hooks (see .pre-commit-config.yaml).
+
+To run the smoke tests (provided below) locally:
+
+```bash
+python -m pip install -r requirements-dev.txt || true
+python -m pip install pytest
+pytest -q
+```
+
+The included tests are lightweight and perform syntax/parsing checks on representative files so they are fast and safe to run.
 
 ## Contributing
 
 Thank you for considering contributing!
+
+[![Contributions Welcome](https://img.shields.io/static/v1.svg?label=Contributions&message=Welcome&color=0059b3&style=flat-square)](CONTRIBUTING.md)
 
 1. Read CONTRIBUTING.md to learn the contribution process and coding standards.
 2. Pick an issue labeled "good first issue" or open a new issue to propose changes.
@@ -158,7 +188,4 @@ This project follows the license in LICENSE.md. See the license file for details
 
 ---
 
-If you'd like, I can:
-- Add a smaller TOC with direct links to popular directories (e.g., data_structures, graphs, sorts),
-- Generate a CONTRIBUTING checklist badge, or
-- Open a PR that adds example runner scripts and minimal tests for a few categories.
+If you'd like, I can also open a dedicated PR that adds more example runner coverage, or expand the tests to actually import and run small, isolated functions with timeouts. Let me know which categories you want deeper test coverage for.
